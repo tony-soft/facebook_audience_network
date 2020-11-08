@@ -336,6 +336,7 @@ class FacebookAudienceNetworkNativeAdView: NSObject, FlutterPlatformView, FBNati
         self.adTitleLabel.text = self.nativeAd.advertiserName ?? ""
         self.adTitleLabel.textColor = self.nativeAdViewAttributes.titleColor
         self.adTitleLabel.font = self.nativeAdViewAttributes.titleFont
+        self.adTitleLabel.numberOfLines = 1
         self.adView.addSubview(self.adTitleLabel)
 
         // Sponsored
@@ -501,6 +502,7 @@ class FacebookAudienceNetworkNativeAdView: NSObject, FlutterPlatformView, FBNati
         self.adTitleLabel.text = self.nativeAd.advertiserName ?? ""
         self.adTitleLabel.textColor = self.nativeAdViewAttributes.titleColor
         self.adTitleLabel.font = self.nativeAdViewAttributes.titleFont
+        self.adTitleLabel.numberOfLines = 1
         self.adView.addSubview(self.adTitleLabel)
 
         // Sponsored
