@@ -161,7 +161,7 @@ class FacebookAudienceNetworkNativeAdView: NSObject, FlutterPlatformView, FBNati
      * using native ad
      */
     func regNativeAdView() {
-        var adType: Int = self.params["ad_type"] as? Int ?? FANConstant.NATIVE_AD_TEMPLATE;
+        let adType: Int = self.params["ad_type"] as? Int ?? FANConstant.NATIVE_AD_TEMPLATE;
 
         switch adType {
         case FANConstant.NATIVE_AD_HORIZONTAL:
