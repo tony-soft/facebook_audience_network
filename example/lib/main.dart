@@ -60,17 +60,14 @@ class AdsPageState extends State<AdsPage> {
 
   void _loadInterstitialAd() {
     FacebookInterstitialAd.loadInterstitialAd(
-      placementId:
-          "IMG_16_9_APP_INSTALL#2312433698835503_2650502525028617", //"IMG_16_9_APP_INSTALL#2312433698835503_2650502525028617" YOUR_PLACEMENT_ID
+      placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2650502525028617", //"IMG_16_9_APP_INSTALL#2312433698835503_2650502525028617" YOUR_PLACEMENT_ID
       listener: (result, value) {
         print(">> FAN > Interstitial Ad: $result --> $value");
-        if (result == InterstitialAdResult.LOADED)
-          _isInterstitialAdLoaded = true;
+        if (result == InterstitialAdResult.LOADED) _isInterstitialAdLoaded = true;
 
         /// Once an Interstitial Ad has been dismissed and becomes invalidated,
         /// load a fresh Ad by calling this function.
-        if (result == InterstitialAdResult.DISMISSED &&
-            value["invalidated"] == true) {
+        if (result == InterstitialAdResult.DISMISSED && value["invalidated"] == true) {
           _isInterstitialAdLoaded = false;
           _loadInterstitialAd();
         }
@@ -84,13 +81,11 @@ class AdsPageState extends State<AdsPage> {
       listener: (result, value) {
         print("Rewarded Ad: $result --> $value");
         if (result == RewardedVideoAdResult.LOADED) _isRewardedAdLoaded = true;
-        if (result == RewardedVideoAdResult.VIDEO_COMPLETE)
-          _isRewardedVideoComplete = true;
+        if (result == RewardedVideoAdResult.VIDEO_COMPLETE) _isRewardedVideoComplete = true;
 
         /// Once a Rewarded Ad has been closed and becomes invalidated,
         /// load a fresh Ad by calling this function.
-        if (result == RewardedVideoAdResult.VIDEO_CLOSED &&
-            (value == true || value["invalidated"] == true)) {
+        if (result == RewardedVideoAdResult.VIDEO_CLOSED && (value == true || value["invalidated"] == true)) {
           _isRewardedAdLoaded = false;
           _loadRewardedVideoAd();
         }
@@ -101,33 +96,19 @@ class AdsPageState extends State<AdsPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Flexible(
-          child: Align(
-            alignment: Alignment(0, -1.0),
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: _getAllButtons(),
-            ),
-          ),
-          fit: FlexFit.tight,
-          flex: 2,
+        Padding(
+          padding: EdgeInsets.all(16),
+          child: _getAllButtons(),
         ),
         // Column(children: <Widget>[
         //   _nativeAd(),
         //   // _nativeBannerAd(),
         //   _nativeAd(),
         // ],),
-        Flexible(
-          child: Align(
-            alignment: Alignment(0, 1.0),
-            child: _currentAd,
-          ),
-          fit: FlexFit.tight,
-          flex: 3,
-        )
+        _currentAd
       ],
     );
   }
@@ -139,11 +120,11 @@ class AdsPageState extends State<AdsPage> {
       childAspectRatio: 3,
       children: <Widget>[
         _getRaisedButton(title: "Banner Ad", onPressed: _showBannerAd),
-        _getRaisedButton(title: "Native Ad", onPressed: _showNativeAd),
-        _getRaisedButton(
-            title: "Native Banner Ad", onPressed: _showNativeBannerAd),
-        _getRaisedButton(
-            title: "Intestitial Ad", onPressed: _showInterstitialAd),
+        _getRaisedButton(title: "Native Ad", onPressed: () => _showNativeAd(NativeAdType.NATIVE_AD)),
+        _getRaisedButton(title: "Native Ad Horizontal", onPressed: () => _showNativeAd(NativeAdType.NATIVE_AD_HORIZONTAL)),
+        _getRaisedButton(title: "Native Ad Vertical", onPressed: () => _showNativeAd(NativeAdType.NATIVE_AD_VERTICAL)),
+        _getRaisedButton(title: "Native Banner Ad", onPressed: _showNativeBannerAd),
+        _getRaisedButton(title: "Intestitial Ad", onPressed: _showInterstitialAd),
         _getRaisedButton(title: "Rewarded Ad", onPressed: _showRewardedAd),
         _getRaisedButton(title: "InStream Ad", onPressed: _showInStreamAd),
       ],
@@ -199,8 +180,7 @@ class AdsPageState extends State<AdsPage> {
   _showBannerAd() {
     setState(() {
       _currentAd = FacebookBannerAd(
-        // placementId:
-        //     "IMG_16_9_APP_INSTALL#2312433698835503_2964944860251047", //testid
+        placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2964944860251047", //testid
         bannerSize: BannerSize.STANDARD,
         listener: (result, value) {
           print("Banner Ad: $result -->  $value");
@@ -216,46 +196,52 @@ class AdsPageState extends State<AdsPage> {
   }
 
   Widget _nativeBannerAd() {
-    return FacebookNativeAd(
-      // placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2964953543583512",
-      adType: NativeAdType.NATIVE_BANNER_AD,
-      bannerAdSize: NativeBannerAdSize.HEIGHT_100,
-      width: double.infinity,
-      backgroundColor: Colors.blue,
-      titleColor: Colors.white,
-      descriptionColor: Colors.white,
-      buttonColor: Colors.deepPurple,
-      buttonTitleColor: Colors.white,
-      buttonBorderColor: Colors.white,
-      listener: (result, value) {
-        print("Native Banner Ad: $result --> $value");
-      },
+    return SafeArea(
+      child: FacebookNativeAd(
+        placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2964953543583512",
+        adType: NativeAdType.NATIVE_BANNER_AD,
+        bannerAdSize: NativeBannerAdSize.HEIGHT_100,
+        width: double.infinity,
+        height: 100,
+        backgroundColor: Colors.blue,
+        titleColor: Colors.white,
+        descriptionColor: Colors.white,
+        buttonColor: Colors.deepPurple,
+        buttonTitleColor: Colors.white,
+        buttonBorderColor: Colors.white,
+        listener: (result, value) {
+          print("Native Banner Ad: $result --> $value");
+        },
+      ),
     );
   }
 
-  _showNativeAd() {
+  _showNativeAd(NativeAdType adType) {
     setState(() {
-      _currentAd = _nativeAd();
+      _currentAd = _nativeAd(adType);
     });
   }
 
-  Widget _nativeAd() {
-    return FacebookNativeAd(
-      // placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2964952163583650",
-      adType: NativeAdType.NATIVE_AD_VERTICAL,
-      width: double.infinity,
-      height: 300,
-      backgroundColor: Colors.blue,
-      titleColor: Colors.white,
-      descriptionColor: Colors.white,
-      buttonColor: Colors.deepPurple,
-      buttonTitleColor: Colors.white,
-      buttonBorderColor: Colors.white,
-      listener: (result, value) {
-        print("Native Ad: $result --> $value");
-      },
-      keepExpandedWhileLoading: true,
-      expandAnimationDuraion: 1000,
+  Widget _nativeAd(NativeAdType adType) {
+    return SafeArea(
+      child: FacebookNativeAd(
+        key: UniqueKey(),
+        placementId: "IMG_16_9_APP_INSTALL#2312433698835503_2964952163583650",
+        adType: adType,
+        width: double.infinity,
+        height: 250,
+        backgroundColor: Colors.blue,
+        titleColor: Colors.white,
+        descriptionColor: Colors.white,
+        buttonColor: Colors.deepPurple,
+        buttonTitleColor: Colors.white,
+        buttonBorderColor: Colors.white,
+        listener: (result, value) {
+          print("Native Ad: $result --> $value");
+        },
+        keepExpandedWhileLoading: true,
+        expandAnimationDuraion: 300,
+      ),
     );
   }
 }
